@@ -31,6 +31,12 @@ import {
   CardDescription, 
   CardFooter 
 } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { 
   Users, 
   MoreHorizontal, 
@@ -39,7 +45,10 @@ import {
   FileText,
   User,
   CalendarClock,
-  Search
+  Search,
+  Server,
+  Globe,
+  Package
 } from "lucide-react";
 import { 
   clients as mockClients, 
@@ -187,7 +196,7 @@ const Clients: React.FC = () => {
             <Tabs defaultValue="details">
               <TabsList className="grid grid-cols-4 w-full">
                 <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="modules">Modules & Apps</TabsTrigger>
+                <TabsTrigger value="products">Products</TabsTrigger>
                 <TabsTrigger value="invoices">Invoices</TabsTrigger>
                 <TabsTrigger value="users">Users</TabsTrigger>
               </TabsList>
@@ -244,50 +253,209 @@ const Clients: React.FC = () => {
                 </Card>
               </TabsContent>
 
-              {/* Modules & Apps Tab */}
-              <TabsContent value="modules">
+              {/* Products Tab */}
+              <TabsContent value="products">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Modules & Applications</CardTitle>
+                    <CardTitle>Products & Subscriptions</CardTitle>
                     <CardDescription>
-                      Configure access to modules and applications
+                      Manage the client's products, subscriptions, and services
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-medium mb-3">Modules</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {["Invoicing", "Reporting", "User Management", "API Access", "Support Portal", "File Storage"].map(module => (
-                          <div key={module} className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={`module-${module}`} 
-                              checked={selectedClient.modules.includes(module)}
-                            />
-                            <label htmlFor={`module-${module}`}>{module}</label>
+                    <Accordion type="single" collapsible className="w-full">
+                      {/* Modules Section */}
+                      <AccordionItem value="modules">
+                        <AccordionTrigger className="text-lg font-medium">
+                          <div className="flex items-center">
+                            <Package className="h-5 w-5 mr-2" />
+                            <span>Software Modules</span>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-medium mb-3">Applications</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {["app1", "app2", "app3", "app4"].map(appId => (
-                          <div key={appId} className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={`app-${appId}`} 
-                              checked={selectedClient.apps.includes(appId)}
-                            />
-                            <label htmlFor={`app-${appId}`}>
-                              {appId === "app1" ? "Invoice Generator" :
-                               appId === "app2" ? "Client Portal" :
-                               appId === "app3" ? "Analytics Dashboard" :
-                               "Mobile Companion"}
-                            </label>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="p-2 space-y-4">
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Configure access to core platform modules
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {["Invoicing", "Reporting", "User Management", "API Access", "Support Portal", "File Storage"].map(module => (
+                                <div key={module} className="flex items-center space-x-2">
+                                  <Checkbox 
+                                    id={`module-${module}`} 
+                                    checked={selectedClient.modules.includes(module)}
+                                  />
+                                  <label htmlFor={`module-${module}`}>{module}</label>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Applications Section */}
+                      <AccordionItem value="applications">
+                        <AccordionTrigger className="text-lg font-medium">
+                          <div className="flex items-center">
+                            <FileText className="h-5 w-5 mr-2" />
+                            <span>Applications</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="p-2 space-y-4">
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Manage applications the client has access to
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {["app1", "app2", "app3", "app4"].map(appId => (
+                                <div key={appId} className="flex items-center space-x-2">
+                                  <Checkbox 
+                                    id={`app-${appId}`} 
+                                    checked={selectedClient.apps.includes(appId)}
+                                  />
+                                  <label htmlFor={`app-${appId}`}>
+                                    {appId === "app1" ? "Invoice Generator" :
+                                     appId === "app2" ? "Client Portal" :
+                                     appId === "app3" ? "Analytics Dashboard" :
+                                     "Mobile Companion"}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Hosting Options Section */}
+                      <AccordionItem value="hosting">
+                        <AccordionTrigger className="text-lg font-medium">
+                          <div className="flex items-center">
+                            <Server className="h-5 w-5 mr-2" />
+                            <span>Hosting</span>
+                            <Badge className="ml-2 bg-blue-500">Usage-based</Badge>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="p-2 space-y-4">
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Configure hosting options billed per usage
+                            </p>
+                            
+                            {/* SWBZA TODO: Add API call to fetch current hosting configuration */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2 col-span-1 md:col-span-2">
+                                <label className="text-sm font-medium">Current Usage</label>
+                                <div className="p-3 bg-muted rounded-md">
+                                  <p>12.5 GB Storage / 45 GB Bandwidth</p>
+                                </div>
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Storage Quota (GB)</label>
+                                <Input type="number" defaultValue="20" />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Bandwidth Quota (GB)</label>
+                                <Input type="number" defaultValue="100" />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">CPU Allocation</label>
+                                <Input type="number" defaultValue="2" />
+                              </div>
+                              
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium">Memory (GB)</label>
+                                <Input type="number" defaultValue="4" />
+                              </div>
+                              
+                              <div className="col-span-1 md:col-span-2">
+                                <div className="flex items-center space-x-2">
+                                  <Checkbox id="auto-scale" defaultChecked />
+                                  <label htmlFor="auto-scale">Enable auto-scaling (additional charges apply)</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Domain Options Section */}
+                      <AccordionItem value="domains">
+                        <AccordionTrigger className="text-lg font-medium">
+                          <div className="flex items-center">
+                            <Globe className="h-5 w-5 mr-2" />
+                            <span>Domains</span>
+                            <Badge className="ml-2 bg-green-500">Annual</Badge>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="p-2 space-y-4">
+                            <p className="text-sm text-muted-foreground mb-4">
+                              Manage domain registrations billed annually
+                            </p>
+                            
+                            {/* SWBZA TODO: Add API call to fetch current domains */}
+                            <div className="space-y-4">
+                              <div className="rounded-md border">
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead>Domain</TableHead>
+                                      <TableHead>Registration Date</TableHead>
+                                      <TableHead>Expiry Date</TableHead>
+                                      <TableHead>Auto-renew</TableHead>
+                                      <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>example.com</TableCell>
+                                      <TableCell>2023-05-10</TableCell>
+                                      <TableCell>2025-05-10</TableCell>
+                                      <TableCell>
+                                        <Checkbox defaultChecked />
+                                      </TableCell>
+                                      <TableCell className="text-right">
+                                        <Button variant="outline" size="sm">Manage</Button>
+                                      </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                      <TableCell>clientsite.org</TableCell>
+                                      <TableCell>2024-01-15</TableCell>
+                                      <TableCell>2025-01-15</TableCell>
+                                      <TableCell>
+                                        <Checkbox defaultChecked />
+                                      </TableCell>
+                                      <TableCell className="text-right">
+                                        <Button variant="outline" size="sm">Manage</Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                </Table>
+                              </div>
+                              
+                              <div className="flex items-center justify-between">
+                                <h4 className="text-sm font-medium">Add New Domain</h4>
+                                <Button size="sm">
+                                  <PlusCircle className="mr-2 h-4 w-4" />
+                                  Register Domain
+                                </Button>
+                              </div>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="md:col-span-2">
+                                  <Input placeholder="Enter domain name" />
+                                </div>
+                                <div>
+                                  <Button className="w-full">Check Availability</Button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </CardContent>
                   <CardFooter className="flex justify-end">
                     <Button onClick={() => handleSaveClient(selectedClient)}>
