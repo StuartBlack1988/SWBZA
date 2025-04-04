@@ -47,7 +47,7 @@ import {
   getInvoicesByClientId,
   getUsersByClientId
 } from "@/services/mockData";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 

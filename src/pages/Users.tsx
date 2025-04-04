@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ import {
   User,
   clients
 } from "@/services/mockData";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/hooks/useToast";
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>(mockUsers);
@@ -43,7 +42,6 @@ const Users: React.FC = () => {
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
 
-  // Filter users based on search and filters
   const filteredUsers = users.filter(user => {
     const matchesSearch = 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,7 +67,6 @@ const Users: React.FC = () => {
            matchesStartDate && matchesEndDate;
   });
 
-  // User actions
   const activateUser = (userId: string) => {
     setUsers(users.map(user => 
       user.id === userId ? { ...user, status: "active" } : user
@@ -85,7 +82,6 @@ const Users: React.FC = () => {
   };
 
   const sendPasswordReset = (userId: string) => {
-    // Simulate sending password reset
     toast.success("Password reset link sent successfully");
   };
 
@@ -96,7 +92,6 @@ const Users: React.FC = () => {
     toast.success("User role updated successfully");
   };
 
-  // Clear all filters
   const clearFilters = () => {
     setSearchTerm("");
     setClientFilter("");

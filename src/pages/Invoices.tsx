@@ -33,7 +33,7 @@ import {
   getClientById,
   InvoiceItem 
 } from "@/services/mockData";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/hooks/useToast";
 import { format } from "date-fns";
 
 const Invoices: React.FC = () => {
