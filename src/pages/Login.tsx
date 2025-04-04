@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,6 +21,7 @@ const Login: React.FC = () => {
     setIsLoading(true);
     
     try {
+      // SWBZA TODO: Replace with actual API authentication call
       await login(email, password);
       toast.success("Login successful");
       navigate("/dashboard");
@@ -33,6 +35,7 @@ const Login: React.FC = () => {
   const handleQuickLogin = async () => {
     setIsLoading(true);
     try {
+      // SWBZA TODO: Replace with actual API authentication call
       await login("admin@example.com", "password");
       toast.success("Demo login successful");
       navigate("/dashboard");
@@ -49,7 +52,7 @@ const Login: React.FC = () => {
         <div className="mb-4 p-2 rounded-full bg-primary/10">
           <FileText className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900">Invoice Hub</h1>
+        <h1 className="text-3xl font-bold text-gray-900">SWBZA</h1>
         <p className="text-gray-500 mt-2">Control Panel Login</p>
       </div>
       

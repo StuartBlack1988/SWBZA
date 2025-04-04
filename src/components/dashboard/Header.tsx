@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           to="/dashboard"
           className="flex items-center gap-2 font-semibold md:hidden"
         >
-          <span className="text-lg">Invoice Hub</span>
+          <span className="text-lg">SWBZA</span>
         </Link>
       </div>
       {user && (

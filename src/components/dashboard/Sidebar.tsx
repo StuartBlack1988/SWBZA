@@ -55,7 +55,7 @@ const Sidebar: React.FC = () => {
       <div className="flex h-14 items-center border-b border-sidebar-border px-4">
         <Link to="/dashboard" className="flex items-center gap-2 font-semibold text-sidebar-foreground">
           <FileText className="h-6 w-6" />
-          <span className="text-lg">Invoice Hub</span>
+          <span className="text-lg">SWBZA</span>
         </Link>
       </div>
       <div className="flex-1 overflow-auto py-4">

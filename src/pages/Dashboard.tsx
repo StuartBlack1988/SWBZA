@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Users, User, LayoutGrid, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { clients, invoices, users, apps } from "@/services/mockData";
 import { Link } from "react-router-dom";
+import { toast } from "@/hooks/useToast";
 
 const DashboardOverviewCard: React.FC<{
   title: string;
@@ -56,20 +57,61 @@ const InvoiceStatusCard: React.FC<{
 );
 
 const Dashboard: React.FC = () => {
+  const [dashboardData, setDashboardData] = useState({
+    clients: [],
+    invoices: [],
+    users: [],
+    apps: [],
+    isLoading: true
+  });
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  // SWBZA TODO: Replace with actual API call to fetch dashboard data
+  const fetchDashboardData = async () => {
+    try {
+      // Simulate API call
+      setTimeout(() => {
+        setDashboardData({
+          clients: clients,
+          invoices: invoices,
+          users: users,
+          apps: apps,
+          isLoading: false
+        });
+      }, 500);
+    } catch (error) {
+      toast.error("Failed to load dashboard data");
+      setDashboardData(prev => ({ ...prev, isLoading: false }));
+    }
+  };
+
   // Calculate metrics
-  const totalClients = clients.length;
-  const activeClients = clients.filter(client => client.status === "active").length;
-  const totalInvoices = invoices.length;
-  const paidInvoices = invoices.filter(invoice => invoice.status === "paid").length;
-  const pendingInvoices = invoices.filter(invoice => invoice.status === "pending").length;
-  const overdueInvoices = invoices.filter(invoice => invoice.status === "overdue").length;
-  const totalUsers = users.length;
-  const totalApps = apps.length;
+  const totalClients = dashboardData.clients.length;
+  const activeClients = dashboardData.clients.filter(client => client.status === "active").length;
+  const totalInvoices = dashboardData.invoices.length;
+  const paidInvoices = dashboardData.invoices.filter(invoice => invoice.status === "paid").length;
+  const pendingInvoices = dashboardData.invoices.filter(invoice => invoice.status === "pending").length;
+  const overdueInvoices = dashboardData.invoices.filter(invoice => invoice.status === "overdue").length;
+  const totalUsers = dashboardData.users.length;
+  const totalApps = dashboardData.apps.length;
   
   // Calculate total revenue
-  const totalRevenue = invoices
+  const totalRevenue = dashboardData.invoices
     .filter(invoice => invoice.status === "paid")
     .reduce((acc, invoice) => acc + invoice.amount, 0);
+
+  if (dashboardData.isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-full">
+          <p>Loading dashboard data...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -77,7 +119,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <p className="text-muted-foreground mt-2">
-            Welcome to your Invoice Hub Control Panel
+            Welcome to your SWBZA Control Panel
           </p>
         </div>
         
