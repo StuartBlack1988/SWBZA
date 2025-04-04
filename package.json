@@ -1,7 +1,8 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "SWBZA",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "homepage": "https://stuartblack1988.github.io/SWBZA/"
   "type": "module",
   "scripts": {
     "dev": "vite",
