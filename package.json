@@ -2,7 +2,7 @@
   "name": "SWBZA",
   "private": true,
   "version": "0.0.1",
-  "homepage": "https://stuartblack1988.github.io/SWBZA/"
+  "homepage": "https://stuartblack1988.github.io/SWBZA/",
   "type": "module",
   "scripts": {
     "dev": "vite",
