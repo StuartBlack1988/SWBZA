@@ -56,6 +56,18 @@ const Invoices: React.FC = () => {
     );
   });
 
+  // Sort invoices: unpaid first, then by issue date (newest first)
+  const sortedInvoices = [...filteredInvoices].sort((a, b) => {
+    // First sort by paid status (unpaid first)
+    if (a.status !== "paid" && b.status === "paid") return -1;
+    if (a.status === "paid" && b.status !== "paid") return 1;
+    
+    // Then sort by issue date (newest first)
+    const dateA = new Date(a.issueDate).getTime();
+    const dateB = new Date(b.issueDate).getTime();
+    return dateB - dateA;
+  });
+
   // Calculate invoice total
   const calculateInvoiceTotal = (items: InvoiceItem[]) => {
     return items.reduce((total, item) => total + (item.quantity * item.unitPrice), 0);
@@ -68,7 +80,7 @@ const Invoices: React.FC = () => {
     ));
     toast.success(`Invoice ${invoiceId} marked as ${isPaid ? 'paid' : 'pending'}`);
     
-    // SWBZA TODO: Call API to update invoice status
+    // TODO: Call API to update invoice status
     console.log(`API call to update invoice ${invoiceId} status to ${isPaid ? 'paid' : 'pending'}`);
   };
 
@@ -124,13 +136,13 @@ const Invoices: React.FC = () => {
       items: [{ description: "", quantity: 1, unitPrice: 0 }]
     });
     
-    // SWBZA TODO: Call API to create new invoice
+    // TODO: Call API to create new invoice
     console.log(`API call to create invoice ${newInvoiceId}`);
   };
 
   // View invoice details
   const viewInvoiceDetails = (invoiceId: string) => {
-    // SWBZA TODO: Implement invoice details view or navigate to details page
+    // TODO: Implement invoice details view or navigate to details page
     console.log(`View details for invoice ${invoiceId}`);
     toast.success(`Viewing details for invoice ${invoiceId}`);
   };
@@ -173,24 +185,27 @@ const Invoices: React.FC = () => {
                 <TableHead>Status</TableHead>
                 <TableHead>Issue Date</TableHead>
                 <TableHead>Due Date</TableHead>
-                <TableHead className="text-center">Paid</TableHead>
                 <TableHead className="text-center">Details</TableHead>
+                <TableHead className="text-center">Paid</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredInvoices.length === 0 ? (
+              {sortedInvoices.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                     No invoices found
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredInvoices.map((invoice) => {
+                sortedInvoices.map((invoice) => {
                   const client = getClientById(invoice.clientId);
                   const isPaid = invoice.status === "paid";
                   
                   return (
-                    <TableRow key={invoice.id}>
+                    <TableRow 
+                      key={invoice.id}
+                      className={isPaid ? "bg-muted/30" : ""}
+                    >
                       <TableCell className="font-medium">{invoice.id}</TableCell>
                       <TableCell>{client?.companyName}</TableCell>
                       <TableCell>${invoice.amount.toLocaleString()}</TableCell>
@@ -206,13 +221,6 @@ const Invoices: React.FC = () => {
                       <TableCell>{invoice.issueDate}</TableCell>
                       <TableCell>{invoice.dueDate}</TableCell>
                       <TableCell className="text-center">
-                        <Switch
-                          checked={isPaid}
-                          onCheckedChange={(checked) => toggleInvoiceStatus(invoice.id, checked)}
-                          aria-label={`Mark invoice ${invoice.id} as ${isPaid ? 'pending' : 'paid'}`}
-                        />
-                      </TableCell>
-                      <TableCell className="text-center">
                         <Button 
                           variant="outline" 
                           size="sm" 
@@ -221,6 +229,13 @@ const Invoices: React.FC = () => {
                           <FileText className="h-4 w-4" />
                           <span className="sr-only md:not-sr-only md:ml-2">View</span>
                         </Button>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Switch
+                          checked={isPaid}
+                          onCheckedChange={(checked) => toggleInvoiceStatus(invoice.id, checked)}
+                          aria-label={`Mark invoice ${invoice.id} as ${isPaid ? 'pending' : 'paid'}`}
+                        />
                       </TableCell>
                     </TableRow>
                   );
