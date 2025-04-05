@@ -20,57 +20,57 @@ export interface Client {
 export const clients: Client[] = [
   {
     id: "c1",
-    companyName: "Acme Corporation",
+    companyName: "Online Today",
     contactName: "John Doe",
-    email: "john@acme.com",
+    email: "john@onlinetoday.com",
     phone: "(555) 123-4567",
-    address: "123 Main St, Anytown, CA 12345",
+    address: "123 Web Ave, Digital City, CA 12345",
     licenseExpiry: "2025-12-31",
     status: "active",
     activeUsers: 24,
-    modules: ["Invoicing", "Reporting", "User Management"],
+    modules: ["Hosting", "Domains", "Email Services", "Website Creation"],
     apps: ["app1", "app3"],
     createdAt: "2023-01-15"
   },
   {
     id: "c2",
-    companyName: "Globex Industries",
+    companyName: "Dietitian Assist",
     contactName: "Jane Smith",
-    email: "jane@globex.com",
+    email: "jane@dietitianassist.com",
     phone: "(555) 987-6543",
-    address: "456 Corporate Blvd, Business City, NY 54321",
+    address: "456 Nutrition Blvd, Wellness City, NY 54321",
     licenseExpiry: "2025-06-15",
     status: "active",
     activeUsers: 18,
-    modules: ["Invoicing", "Reporting"],
+    modules: ["Client Management", "Meal Planning"],
     apps: ["app1", "app2"],
     createdAt: "2023-03-22"
   },
   {
     id: "c3",
-    companyName: "Sirius Cybernetics",
-    contactName: "Arthur Dent",
-    email: "arthur@sirius.com",
+    companyName: "Club Assist",
+    contactName: "Arthur Reed",
+    email: "arthur@clubassist.com",
     phone: "(555) 424-2424",
-    address: "42 Galaxy Way, Universe City, CA 90210",
+    address: "42 Sports Way, Athletic City, CA 90210",
     licenseExpiry: "2024-08-05",
     status: "active",
     activeUsers: 42,
-    modules: ["Invoicing", "User Management", "API Access", "Reporting"],
+    modules: ["Member Management", "Event Scheduling", "Payment Processing", "Reporting"],
     apps: ["app1", "app2", "app3", "app4"],
     createdAt: "2023-05-10"
   },
   {
     id: "c4",
-    companyName: "Initech Software",
-    contactName: "Peter Gibbons",
-    email: "peter@initech.com",
+    companyName: "Practice Assist",
+    contactName: "Peter Gibson",
+    email: "peter@practiceassist.com",
     phone: "(555) 867-5309",
-    address: "999 Office Park, Cubicle City, TX 75001",
+    address: "999 Medical Park, Healthcare City, TX 75001",
     licenseExpiry: "2024-06-01",
     status: "inactive",
     activeUsers: 0,
-    modules: ["Invoicing"],
+    modules: ["Patient Management"],
     apps: ["app1"],
     createdAt: "2023-02-19"
   },
@@ -84,7 +84,7 @@ export const clients: Client[] = [
     licenseExpiry: "2025-10-17",
     status: "active",
     activeUsers: 35,
-    modules: ["Invoicing", "Reporting", "User Management", "API Access"],
+    modules: ["Financial Management", "Reporting", "User Management", "API Access"],
     apps: ["app1", "app2", "app4"],
     createdAt: "2023-07-03"
   }
@@ -116,8 +116,9 @@ export const invoices: Invoice[] = [
     issueDate: "2024-03-01",
     dueDate: "2024-03-31",
     items: [
-      { description: "Software License", quantity: 10, unitPrice: 200 },
-      { description: "Support Hours", quantity: 5, unitPrice: 100 }
+      { description: "Website Hosting (Annual)", quantity: 1, unitPrice: 1200 },
+      { description: "Domain Registration", quantity: 5, unitPrice: 120 },
+      { description: "Email Services", quantity: 10, unitPrice: 50 }
     ]
   },
   {
@@ -128,7 +129,7 @@ export const invoices: Invoice[] = [
     issueDate: "2024-03-15",
     dueDate: "2024-04-15",
     items: [
-      { description: "Software License", quantity: 6, unitPrice: 200 },
+      { description: "Dietitian Assist App Subscription", quantity: 6, unitPrice: 200 },
       { description: "Implementation Fee", quantity: 1, unitPrice: 600 }
     ]
   },
@@ -140,7 +141,7 @@ export const invoices: Invoice[] = [
     issueDate: "2024-02-10",
     dueDate: "2024-03-10",
     items: [
-      { description: "Software License", quantity: 14, unitPrice: 200 },
+      { description: "Club Management Software License", quantity: 14, unitPrice: 200 },
       { description: "Premium Support", quantity: 1, unitPrice: 1400 }
     ]
   },
@@ -152,18 +153,18 @@ export const invoices: Invoice[] = [
     issueDate: "2024-01-15",
     dueDate: "2024-02-15",
     items: [
-      { description: "API Access Add-on", quantity: 1, unitPrice: 1200 }
+      { description: "Website Creation Package", quantity: 1, unitPrice: 1200 }
     ]
   },
   {
     id: "INV-005",
-    clientId: "c5",
+    clientId: "c4",
     amount: 3500,
     status: "pending",
     issueDate: "2024-03-25",
     dueDate: "2024-04-25",
     items: [
-      { description: "Software License", quantity: 15, unitPrice: 200 },
+      { description: "Practice Management Software", quantity: 15, unitPrice: 200 },
       { description: "Custom Development", quantity: 5, unitPrice: 100 }
     ]
   }
@@ -186,7 +187,7 @@ export const users: User[] = [
     id: "u1",
     clientId: "c1",
     name: "John Smith",
-    email: "john.smith@acme.com",
+    email: "john.smith@onlinetoday.com",
     role: "admin",
     status: "active",
     startDate: "2023-01-15",
@@ -196,7 +197,7 @@ export const users: User[] = [
     id: "u2",
     clientId: "c1",
     name: "Sarah Johnson",
-    email: "sarah@acme.com",
+    email: "sarah@onlinetoday.com",
     role: "manager",
     status: "active",
     startDate: "2023-02-10",
@@ -206,7 +207,7 @@ export const users: User[] = [
     id: "u3",
     clientId: "c2",
     name: "Michael Williams",
-    email: "michael@globex.com",
+    email: "michael@dietitianassist.com",
     role: "admin",
     status: "active",
     startDate: "2023-03-22",
@@ -216,7 +217,7 @@ export const users: User[] = [
     id: "u4",
     clientId: "c2",
     name: "Jessica Brown",
-    email: "jessica@globex.com",
+    email: "jessica@dietitianassist.com",
     role: "user",
     status: "inactive",
     startDate: "2023-04-05",
@@ -226,7 +227,7 @@ export const users: User[] = [
     id: "u5",
     clientId: "c3",
     name: "David Miller",
-    email: "david@sirius.com",
+    email: "david@clubassist.com",
     role: "admin",
     status: "active",
     startDate: "2023-05-10",
@@ -236,7 +237,7 @@ export const users: User[] = [
     id: "u6",
     clientId: "c3",
     name: "Emily Taylor",
-    email: "emily@sirius.com",
+    email: "emily@clubassist.com",
     role: "manager",
     status: "active",
     startDate: "2023-06-20",
@@ -246,7 +247,7 @@ export const users: User[] = [
     id: "u7",
     clientId: "c3",
     name: "Robert Wilson",
-    email: "robert@sirius.com",
+    email: "robert@clubassist.com",
     role: "user",
     status: "active",
     startDate: "2023-07-15",
@@ -254,9 +255,9 @@ export const users: User[] = [
   },
   {
     id: "u8",
-    clientId: "c5",
+    clientId: "c4",
     name: "Lucius Fox",
-    email: "lucius@wayne.com",
+    email: "lucius@practiceassist.com",
     role: "admin",
     status: "active",
     startDate: "2023-07-03",
@@ -279,43 +280,43 @@ export interface App {
 export const apps: App[] = [
   {
     id: "app1",
-    name: "Invoice Generator",
-    description: "Core invoicing application with customizable templates and automated reminders",
-    version: "2.1.0",
+    name: "Hosting Services",
+    description: "Web hosting solutions with high uptime and reliability",
+    version: "3.1.0",
     releaseDate: "2023-12-10",
     clientCount: 5,
     userCount: 112,
-    features: ["Custom Templates", "Automated Reminders", "Payment Integration", "Tax Calculation"]
+    features: ["SSD Storage", "CDN Integration", "Daily Backups", "Security Monitoring"]
   },
   {
     id: "app2",
-    name: "Client Portal",
-    description: "Self-service portal allowing clients to view invoices and make payments",
+    name: "Dietitian Portal",
+    description: "Client management and nutrition planning tool for dietitians",
     version: "1.5.2",
     releaseDate: "2024-01-22",
     clientCount: 3,
     userCount: 87,
-    features: ["Invoice History", "Payment Processing", "Communication Center", "Document Storage"]
+    features: ["Client Records", "Meal Planning", "Nutrition Analysis", "Progress Tracking"]
   },
   {
     id: "app3",
-    name: "Analytics Dashboard",
-    description: "Advanced reporting and analytics for financial performance tracking",
-    version: "1.2.0",
+    name: "Domain Management",
+    description: "Domain registration and management tools",
+    version: "2.2.0",
     releaseDate: "2024-02-15",
     clientCount: 3,
     userCount: 42,
-    features: ["Interactive Charts", "Custom Reports", "Data Export", "Trend Analysis"]
+    features: ["Domain Registration", "DNS Management", "Transfer Tools", "WHOIS Privacy"]
   },
   {
     id: "app4",
-    name: "Mobile Companion",
-    description: "Mobile application for on-the-go invoice management",
+    name: "Club Manager",
+    description: "Comprehensive club and membership management solution",
     version: "1.0.5",
     releaseDate: "2024-03-05",
     clientCount: 2,
     userCount: 35,
-    features: ["Invoice Creation", "Photo Receipt Capture", "Offline Mode", "Push Notifications"]
+    features: ["Member Database", "Event Calendar", "Payment Processing", "Communication Tools"]
   }
 ];
 
