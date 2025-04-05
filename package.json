@@ -2,14 +2,17 @@
   "name": "SWBZA",
   "private": true,
   "version": "0.0.1",
-  "homepage": "https://stuartblack1988.github.io/",
+  "homepage": "https://stuartblack1988.github.io/SWBZA",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
