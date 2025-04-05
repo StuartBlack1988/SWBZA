@@ -12,8 +12,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { PlusCircle } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { 
+  Badge, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle,
+  Checkbox
+} from "@/components/ui/index"; 
+import { 
+  PlusCircle, 
+  MoreHorizontal, 
+  Package, 
+  Users 
+} from "lucide-react";
 import { toast } from "@/hooks/useToast";
+import { clients as mockClients } from "@/services/mockData";
 
 // Product types
 type ProductType = "hosting" | "domain" | "license" | "support";
@@ -27,6 +47,7 @@ interface Product {
   price: number;
   billingType: BillingType;
   active: boolean;
+  clientIds: string[]; // IDs of clients using this product
 }
 
 // Mock products data
@@ -38,7 +59,8 @@ const initialProducts: Product[] = [
     type: "hosting",
     price: 5.99,
     billingType: "monthly",
-    active: true
+    active: true,
+    clientIds: ["client1", "client3"]
   },
   {
     id: "prod2",
@@ -47,7 +69,8 @@ const initialProducts: Product[] = [
     type: "hosting",
     price: 19.99,
     billingType: "monthly",
-    active: true
+    active: true,
+    clientIds: ["client2"]
   },
   {
     id: "prod3",
@@ -56,7 +79,8 @@ const initialProducts: Product[] = [
     type: "domain",
     price: 12.99,
     billingType: "annual",
-    active: true
+    active: true,
+    clientIds: ["client1", "client2", "client3"]
   },
   {
     id: "prod4",
@@ -65,7 +89,8 @@ const initialProducts: Product[] = [
     type: "license",
     price: 299.99,
     billingType: "annual",
-    active: true
+    active: true,
+    clientIds: ["client2"]
   },
   {
     id: "prod5",
@@ -74,7 +99,8 @@ const initialProducts: Product[] = [
     type: "support",
     price: 49.99,
     billingType: "monthly",
-    active: true
+    active: true,
+    clientIds: ["client3"]
   },
   {
     id: "prod6",
@@ -83,14 +109,17 @@ const initialProducts: Product[] = [
     type: "hosting",
     price: 0.10,
     billingType: "usage",
-    active: true
+    active: true,
+    clientIds: []
   }
 ];
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState<Omit<Product, "id" | "active">>({
+  const [isClientDialogOpen, setIsClientDialogOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [newProduct, setNewProduct] = useState<Omit<Product, "id" | "active" | "clientIds">>({
     name: "",
     description: "",
     type: "hosting",
@@ -98,6 +127,9 @@ const Products: React.FC = () => {
     billingType: "monthly"
   });
   const [filterType, setFilterType] = useState<ProductType | "all">("all");
+
+  // Get selected product
+  const selectedProduct = selectedProductId ? products.find(p => p.id === selectedProductId) : null;
 
   // Filter products by type
   const filteredProducts = filterType === "all" 
@@ -110,7 +142,8 @@ const Products: React.FC = () => {
     const product: Product = {
       ...newProduct,
       id: productId,
-      active: true
+      active: true,
+      clientIds: []
     };
     
     setProducts([...products, product]);
@@ -125,6 +158,45 @@ const Products: React.FC = () => {
       price: 0,
       billingType: "monthly"
     });
+  };
+
+  // Count users for product by client
+  const getUserCountByClient = (productId: string, clientId: string) => {
+    // This is a mock implementation - in a real app, this would query the database
+    // Static values for demonstration
+    const mockUserCounts: Record<string, Record<string, number>> = {
+      "prod1": { "client1": 5, "client3": 8 },
+      "prod2": { "client2": 12 },
+      "prod3": { "client1": 2, "client2": 3, "client3": 1 },
+      "prod4": { "client2": 7 },
+      "prod5": { "client3": 4 }
+    };
+    
+    return mockUserCounts[productId]?.[clientId] || 0;
+  };
+
+  // Get total user count for a product
+  const getTotalUserCount = (productId: string) => {
+    const product = products.find(p => p.id === productId);
+    if (!product) return 0;
+    
+    return product.clientIds.reduce((total, clientId) => {
+      return total + getUserCountByClient(productId, clientId);
+    }, 0);
+  };
+
+  // Toggle client for product
+  const toggleClientForProduct = (productId: string, clientId: string) => {
+    setProducts(products.map(product => {
+      if (product.id === productId) {
+        const clientIds = product.clientIds.includes(clientId)
+          ? product.clientIds.filter(id => id !== clientId)
+          : [...product.clientIds, clientId];
+        
+        return { ...product, clientIds };
+      }
+      return product;
+    }));
   };
 
   // Format price with billing type
@@ -193,12 +265,15 @@ const Products: React.FC = () => {
                 <TableHead>Price</TableHead>
                 <TableHead>Billing</TableHead>
                 <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Clients</TableHead>
+                <TableHead className="text-center">Users</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredProducts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                     No products found
                   </TableCell>
                 </TableRow>
@@ -225,6 +300,38 @@ const Products: React.FC = () => {
                           Inactive
                         </span>
                       )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="outline">{product.clientIds.length}</Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge variant="secondary">{getTotalUserCount(product.id)}</Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Actions</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem 
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSelectedProductId(product.id);
+                              setIsClientDialogOpen(true);
+                            }}
+                          >
+                            <Users className="mr-2 h-4 w-4" />
+                            Manage Clients
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="cursor-pointer">
+                            <Package className="mr-2 h-4 w-4" />
+                            Edit Product
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))
@@ -315,6 +422,65 @@ const Products: React.FC = () => {
             </Button>
             <Button onClick={handleAddProduct} disabled={!newProduct.name}>
               Add Product
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Clients Dialog */}
+      <Dialog open={isClientDialogOpen} onOpenChange={setIsClientDialogOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Manage Clients for {selectedProduct?.name}</DialogTitle>
+            <DialogDescription>
+              Select which clients have access to this product
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Client Access</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">Access</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead className="text-center">Active Users</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {mockClients.map((client) => (
+                      <TableRow key={client.id}>
+                        <TableCell>
+                          <Checkbox 
+                            checked={selectedProduct?.clientIds.includes(client.id)}
+                            onCheckedChange={() => {
+                              if (selectedProductId) {
+                                toggleClientForProduct(selectedProductId, client.id);
+                              }
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{client.companyName}</TableCell>
+                        <TableCell>{client.contactName}</TableCell>
+                        <TableCell className="text-center">
+                          {selectedProductId ? getUserCountByClient(selectedProductId, client.id) : 0}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
+
+          <DialogFooter>
+            <Button onClick={() => setIsClientDialogOpen(false)}>
+              Done
             </Button>
           </DialogFooter>
         </DialogContent>

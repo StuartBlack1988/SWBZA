@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -60,24 +59,89 @@ import { toast } from "@/hooks/useToast";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
+interface Product {
+  id: string;
+  name: string;
+  type: string;
+  price: number;
+  billingType: string;
+  clientIds: string[];
+}
+
+const mockProducts: Product[] = [
+  {
+    id: "prod1",
+    name: "Basic Hosting",
+    type: "hosting",
+    price: 5.99,
+    billingType: "monthly",
+    clientIds: ["client1", "client3"]
+  },
+  {
+    id: "prod2",
+    name: "Premium Hosting",
+    type: "hosting",
+    price: 19.99,
+    billingType: "monthly",
+    clientIds: ["client2"]
+  },
+  {
+    id: "prod3",
+    name: "Domain Registration",
+    type: "domain",
+    price: 12.99,
+    billingType: "annual",
+    clientIds: ["client1", "client2", "client3"]
+  },
+  {
+    id: "prod4",
+    name: "Enterprise License",
+    type: "license",
+    price: 299.99,
+    billingType: "annual",
+    clientIds: ["client2"]
+  },
+  {
+    id: "prod5",
+    name: "Priority Support",
+    type: "support",
+    price: 49.99,
+    billingType: "monthly",
+    clientIds: ["client3"]
+  }
+];
+
 const Clients: React.FC = () => {
   const [clients, setClients] = useState<Client[]>(mockClients);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
-  // Filter clients based on search term
   const filteredClients = clients.filter(client => 
     client.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Get selected client
   const selectedClient = selectedClientId 
     ? clients.find(client => client.id === selectedClientId) 
     : null;
 
-  // Handle saving client changes
+  const getProductsForClient = (clientId: string) => {
+    return mockProducts.filter(product => product.clientIds.includes(clientId));
+  };
+
+  const getUserCountByProduct = (productId: string, clientId: string) => {
+    const mockUserCounts: Record<string, Record<string, number>> = {
+      "prod1": { "client1": 5, "client3": 8 },
+      "prod2": { "client2": 12 },
+      "prod3": { "client1": 2, "client2": 3, "client3": 1 },
+      "prod4": { "client2": 7 },
+      "prod5": { "client3": 4 }
+    };
+    
+    return mockUserCounts[productId]?.[clientId] || 0;
+  };
+
   const handleSaveClient = (updatedClient: Client) => {
     setClients(clients.map(client => 
       client.id === updatedClient.id ? updatedClient : client
@@ -85,7 +149,6 @@ const Clients: React.FC = () => {
     toast.success(`${updatedClient.companyName} updated successfully`);
   };
 
-  // Client status badge component
   const ClientStatusBadge: React.FC<{ status: "active" | "inactive" }> = ({ status }) => (
     <Badge 
       variant={status === "active" ? "default" : "secondary"}
@@ -132,57 +195,73 @@ const Clients: React.FC = () => {
                 <TableHead>Status</TableHead>
                 <TableHead>License Expires</TableHead>
                 <TableHead>Active Users</TableHead>
+                <TableHead>Products</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredClients.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     No clients found
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredClients.map((client) => (
-                  <TableRow key={client.id}>
-                    <TableCell className="font-medium">{client.companyName}</TableCell>
-                    <TableCell>
-                      <div>{client.contactName}</div>
-                      <div className="text-sm text-muted-foreground">{client.email}</div>
-                    </TableCell>
-                    <TableCell>
-                      <ClientStatusBadge status={client.status} />
-                    </TableCell>
-                    <TableCell>{client.licenseExpiry}</TableCell>
-                    <TableCell>{client.activeUsers}</TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Actions</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem 
-                            className="cursor-pointer"
-                            onClick={() => setSelectedClientId(client.id)}
-                          >
-                            <Settings className="mr-2 h-4 w-4" />
-                            Manage Client
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
+                filteredClients.map((client) => {
+                  const clientProducts = getProductsForClient(client.id);
+                  return (
+                    <TableRow key={client.id}>
+                      <TableCell className="font-medium">{client.companyName}</TableCell>
+                      <TableCell>
+                        <div>{client.contactName}</div>
+                        <div className="text-sm text-muted-foreground">{client.email}</div>
+                      </TableCell>
+                      <TableCell>
+                        <ClientStatusBadge status={client.status} />
+                      </TableCell>
+                      <TableCell>{client.licenseExpiry}</TableCell>
+                      <TableCell>{client.activeUsers}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {clientProducts.length > 0 ? (
+                            clientProducts.map(product => (
+                              <Badge key={product.id} variant="outline" className="capitalize">
+                                {product.name}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-muted-foreground text-sm">No products</span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Actions</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem 
+                              className="cursor-pointer"
+                              onClick={() => setSelectedClientId(client.id)}
+                            >
+                              <Settings className="mr-2 h-4 w-4" />
+                              Manage Client
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
         </div>
       </div>
 
-      {/* Client Details Dialog */}
       <Dialog open={selectedClientId !== null} onOpenChange={(open) => !open && setSelectedClientId(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -194,14 +273,14 @@ const Clients: React.FC = () => {
 
           {selectedClient && (
             <Tabs defaultValue="details">
-              <TabsList className="grid grid-cols-4 w-full">
+              <TabsList className="grid grid-cols-5 w-full">
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="products">Products</TabsTrigger>
                 <TabsTrigger value="invoices">Invoices</TabsTrigger>
                 <TabsTrigger value="users">Users</TabsTrigger>
+                <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
               </TabsList>
 
-              {/* Details Tab */}
               <TabsContent value="details">
                 <Card>
                   <CardHeader>
@@ -253,219 +332,68 @@ const Clients: React.FC = () => {
                 </Card>
               </TabsContent>
 
-              {/* Products Tab */}
               <TabsContent value="products">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Products & Subscriptions</CardTitle>
+                    <CardTitle>Client Products</CardTitle>
                     <CardDescription>
-                      Manage the client's products, subscriptions, and services
+                      Manage product access and view usage
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <Accordion type="single" collapsible className="w-full">
-                      {/* Modules Section */}
-                      <AccordionItem value="modules">
-                        <AccordionTrigger className="text-lg font-medium">
-                          <div className="flex items-center">
-                            <Package className="h-5 w-5 mr-2" />
-                            <span>Software Modules</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-2 space-y-4">
-                            <p className="text-sm text-muted-foreground mb-4">
-                              Configure access to core platform modules
-                            </p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {["Invoicing", "Reporting", "User Management", "API Access", "Support Portal", "File Storage"].map(module => (
-                                <div key={module} className="flex items-center space-x-2">
-                                  <Checkbox 
-                                    id={`module-${module}`} 
-                                    checked={selectedClient.modules.includes(module)}
-                                  />
-                                  <label htmlFor={`module-${module}`}>{module}</label>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Billing</TableHead>
+                          <TableHead className="text-center">Active Users</TableHead>
+                          <TableHead className="text-center">Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {getProductsForClient(selectedClient.id).length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
+                              No products assigned to this client
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          getProductsForClient(selectedClient.id).map(product => (
+                            <TableRow key={product.id}>
+                              <TableCell className="font-medium">{product.name}</TableCell>
+                              <TableCell className="capitalize">{product.type}</TableCell>
+                              <TableCell>${product.price.toFixed(2)}</TableCell>
+                              <TableCell>
+                                <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                                  {product.billingType === "usage" ? "Per Usage" : 
+                                   product.billingType === "monthly" ? "Monthly" : "Annual"}
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      {/* Applications Section */}
-                      <AccordionItem value="applications">
-                        <AccordionTrigger className="text-lg font-medium">
-                          <div className="flex items-center">
-                            <FileText className="h-5 w-5 mr-2" />
-                            <span>Applications</span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-2 space-y-4">
-                            <p className="text-sm text-muted-foreground mb-4">
-                              Manage applications the client has access to
-                            </p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {["app1", "app2", "app3", "app4"].map(appId => (
-                                <div key={appId} className="flex items-center space-x-2">
-                                  <Checkbox 
-                                    id={`app-${appId}`} 
-                                    checked={selectedClient.apps.includes(appId)}
-                                  />
-                                  <label htmlFor={`app-${appId}`}>
-                                    {appId === "app1" ? "Invoice Generator" :
-                                     appId === "app2" ? "Client Portal" :
-                                     appId === "app3" ? "Analytics Dashboard" :
-                                     "Mobile Companion"}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      {/* Hosting Options Section */}
-                      <AccordionItem value="hosting">
-                        <AccordionTrigger className="text-lg font-medium">
-                          <div className="flex items-center">
-                            <Server className="h-5 w-5 mr-2" />
-                            <span>Hosting</span>
-                            <Badge className="ml-2 bg-blue-500">Usage-based</Badge>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-2 space-y-4">
-                            <p className="text-sm text-muted-foreground mb-4">
-                              Configure hosting options billed per usage
-                            </p>
-                            
-                            {/* SWBZA TODO: Add API call to fetch current hosting configuration */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2 col-span-1 md:col-span-2">
-                                <label className="text-sm font-medium">Current Usage</label>
-                                <div className="p-3 bg-muted rounded-md">
-                                  <p>12.5 GB Storage / 45 GB Bandwidth</p>
-                                </div>
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Storage Quota (GB)</label>
-                                <Input type="number" defaultValue="20" />
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Bandwidth Quota (GB)</label>
-                                <Input type="number" defaultValue="100" />
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">CPU Allocation</label>
-                                <Input type="number" defaultValue="2" />
-                              </div>
-                              
-                              <div className="space-y-2">
-                                <label className="text-sm font-medium">Memory (GB)</label>
-                                <Input type="number" defaultValue="4" />
-                              </div>
-                              
-                              <div className="col-span-1 md:col-span-2">
-                                <div className="flex items-center space-x-2">
-                                  <Checkbox id="auto-scale" defaultChecked />
-                                  <label htmlFor="auto-scale">Enable auto-scaling (additional charges apply)</label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      {/* Domain Options Section */}
-                      <AccordionItem value="domains">
-                        <AccordionTrigger className="text-lg font-medium">
-                          <div className="flex items-center">
-                            <Globe className="h-5 w-5 mr-2" />
-                            <span>Domains</span>
-                            <Badge className="ml-2 bg-green-500">Annual</Badge>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="p-2 space-y-4">
-                            <p className="text-sm text-muted-foreground mb-4">
-                              Manage domain registrations billed annually
-                            </p>
-                            
-                            {/* SWBZA TODO: Add API call to fetch current domains */}
-                            <div className="space-y-4">
-                              <div className="rounded-md border">
-                                <Table>
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead>Domain</TableHead>
-                                      <TableHead>Registration Date</TableHead>
-                                      <TableHead>Expiry Date</TableHead>
-                                      <TableHead>Auto-renew</TableHead>
-                                      <TableHead className="text-right">Actions</TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    <TableRow>
-                                      <TableCell>example.com</TableCell>
-                                      <TableCell>2023-05-10</TableCell>
-                                      <TableCell>2025-05-10</TableCell>
-                                      <TableCell>
-                                        <Checkbox defaultChecked />
-                                      </TableCell>
-                                      <TableCell className="text-right">
-                                        <Button variant="outline" size="sm">Manage</Button>
-                                      </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                      <TableCell>clientsite.org</TableCell>
-                                      <TableCell>2024-01-15</TableCell>
-                                      <TableCell>2025-01-15</TableCell>
-                                      <TableCell>
-                                        <Checkbox defaultChecked />
-                                      </TableCell>
-                                      <TableCell className="text-right">
-                                        <Button variant="outline" size="sm">Manage</Button>
-                                      </TableCell>
-                                    </TableRow>
-                                  </TableBody>
-                                </Table>
-                              </div>
-                              
-                              <div className="flex items-center justify-between">
-                                <h4 className="text-sm font-medium">Add New Domain</h4>
-                                <Button size="sm">
-                                  <PlusCircle className="mr-2 h-4 w-4" />
-                                  Register Domain
-                                </Button>
-                              </div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div className="md:col-span-2">
-                                  <Input placeholder="Enter domain name" />
-                                </div>
-                                <div>
-                                  <Button className="w-full">Check Availability</Button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <Badge>{getUserCountByProduct(product.id, selectedClient.id)}</Badge>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">
+                                  Active
+                                </span>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
                   </CardContent>
                   <CardFooter className="flex justify-end">
-                    <Button onClick={() => handleSaveClient(selectedClient)}>
-                      Save Changes
+                    <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Assign Product
                     </Button>
                   </CardFooter>
                 </Card>
               </TabsContent>
 
-              {/* Invoices Tab */}
               <TabsContent value="invoices">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
@@ -523,7 +451,6 @@ const Clients: React.FC = () => {
                 </Card>
               </TabsContent>
 
-              {/* Users Tab */}
               <TabsContent value="users">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
@@ -575,6 +502,69 @@ const Clients: React.FC = () => {
                         )}
                       </TableBody>
                     </Table>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="subscriptions">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Product Subscriptions</CardTitle>
+                    <CardDescription>
+                      Manage billing for client's products
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {getProductsForClient(selectedClient.id).length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground">
+                          No subscriptions found for this client
+                        </div>
+                      ) : (
+                        getProductsForClient(selectedClient.id).map(product => (
+                          <div key={product.id} className="border rounded-md p-4">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <h4 className="font-medium">{product.name}</h4>
+                                <p className="text-sm text-muted-foreground capitalize">{product.type}</p>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-bold">${product.price.toFixed(2)}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {product.billingType === "usage" ? "Per Usage" : 
+                                   product.billingType === "monthly" ? "Monthly" : "Annual"}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                              <div className="space-y-1">
+                                <div className="text-sm text-muted-foreground">Next billing</div>
+                                <div>April 15, 2025</div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="text-sm text-muted-foreground">Users</div>
+                                <div>{getUserCountByProduct(product.id, selectedClient.id)}</div>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="text-sm text-muted-foreground">Status</div>
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success/10 text-success">
+                                  Active
+                                </span>
+                              </div>
+                              <div className="space-y-1">
+                                <div className="text-sm text-muted-foreground">Payment method</div>
+                                <div>VISA ending in 4242</div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-end mt-4">
+                              <Button variant="outline" size="sm">Manage</Button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </TabsContent>
