@@ -11,9 +11,9 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Invoices from "./pages/Invoices";
-import Clients from "./pages/Clients";
 import Users from "./pages/Users";
-import Apps from "./pages/Apps";
+import Applications from "./pages/Applications";
+import ApplicationProducts from "./pages/ApplicationProducts";
 import Products from "./pages/Products";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -42,19 +42,24 @@ const App = () => (
                 <Invoices />
               </ProtectedRoute>
             } />
-            <Route path="/clients" element={
+            <Route path="/applications" element={
               <ProtectedRoute>
-                <Clients />
+                <Applications />
+              </ProtectedRoute>
+            } />
+            <Route path="/applications/:applicationId/products" element={
+              <ProtectedRoute>
+                <ApplicationProducts />
+              </ProtectedRoute>
+            } />
+            <Route path="/applications/:applicationId/details" element={
+              <ProtectedRoute>
+                <Applications />
               </ProtectedRoute>
             } />
             <Route path="/users" element={
               <ProtectedRoute>
                 <Users />
-              </ProtectedRoute>
-            } />
-            <Route path="/apps" element={
-              <ProtectedRoute>
-                <Apps />
               </ProtectedRoute>
             } />
             <Route path="/products" element={

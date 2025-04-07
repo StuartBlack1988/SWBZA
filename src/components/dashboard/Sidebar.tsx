@@ -5,11 +5,10 @@ import { cn } from "@/lib/utils";
 import { 
   FileText, 
   Users, 
-  User, 
-  LayoutGrid, 
   Home, 
   LogOut,
-  Settings 
+  Settings,
+  LayoutGrid
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -73,22 +72,16 @@ const Sidebar: React.FC = () => {
             isActive={isActive("/invoices")}
           />
           <SidebarItem
-            icon={Users}
-            label="Clients"
-            href="/clients"
-            isActive={isActive("/clients")}
+            icon={LayoutGrid}
+            label="Applications"
+            href="/applications"
+            isActive={isActive("/applications")}
           />
           <SidebarItem
-            icon={User}
+            icon={Users}
             label="Users"
             href="/users"
             isActive={isActive("/users")}
-          />
-          <SidebarItem
-            icon={LayoutGrid}
-            label="Apps"
-            href="/apps"
-            isActive={isActive("/apps")}
           />
           <SidebarItem
             icon={Settings}
