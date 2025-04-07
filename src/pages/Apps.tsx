@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { mockApps as apps, App, clients, Client } from "@/services/mockData";
+import { apps, App, clients, Client } from "@/services/mockData";
 
 // Import components
 import AppSearchAndFilter from "./apps/AppSearchAndFilter";
