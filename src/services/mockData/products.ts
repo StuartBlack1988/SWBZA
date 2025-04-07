@@ -1,4 +1,3 @@
-
 import { applications } from './applications';
 
 // Products
@@ -198,8 +197,4 @@ export const getProductsByApplicationId = (applicationId: string): Product[] => 
 
 export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);
-};
-
-export const countUsersForProduct = (productId: string, getClientSubscriptionByProductId: Function): number => {
-  return 0; // This will be implemented in the helper functions file
 };
