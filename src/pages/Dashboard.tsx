@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Users, User, LayoutGrid, AlertCircle, CheckCircle, Clock } from "lucide-react";
-import { clients, invoices, users, apps } from "@/services/mockData";
+import { clients, invoices, users, applications } from "@/services/mockData";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/useToast";
 
@@ -61,7 +60,7 @@ const Dashboard: React.FC = () => {
     clients: [],
     invoices: [],
     users: [],
-    apps: [],
+    applications: [],
     isLoading: true
   });
 
@@ -69,16 +68,14 @@ const Dashboard: React.FC = () => {
     fetchDashboardData();
   }, []);
 
-  // SWBZA TODO: Replace with actual API call to fetch dashboard data
   const fetchDashboardData = async () => {
     try {
-      // Simulate API call
       setTimeout(() => {
         setDashboardData({
           clients: clients,
           invoices: invoices,
           users: users,
-          apps: apps,
+          applications: applications,
           isLoading: false
         });
       }, 500);
@@ -88,7 +85,6 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Calculate metrics
   const totalClients = dashboardData.clients.length;
   const activeClients = dashboardData.clients.filter(client => client.status === "active").length;
   const totalInvoices = dashboardData.invoices.length;
@@ -96,9 +92,8 @@ const Dashboard: React.FC = () => {
   const pendingInvoices = dashboardData.invoices.filter(invoice => invoice.status === "pending").length;
   const overdueInvoices = dashboardData.invoices.filter(invoice => invoice.status === "overdue").length;
   const totalUsers = dashboardData.users.length;
-  const totalApps = dashboardData.apps.length;
+  const totalApps = dashboardData.applications.length;
   
-  // Calculate total revenue
   const totalRevenue = dashboardData.invoices
     .filter(invoice => invoice.status === "paid")
     .reduce((acc, invoice) => acc + invoice.amount, 0);

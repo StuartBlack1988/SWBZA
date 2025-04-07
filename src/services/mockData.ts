@@ -1,4 +1,3 @@
-
 // Mock data for the invoice hub control panel
 
 // Applications
@@ -60,6 +59,10 @@ export const applications: Application[] = [
     createdAt: "2023-02-19"
   }
 ];
+
+// For backward compatibility with places that use 'apps' instead of 'applications'
+export const apps = applications;
+export type App = Application;
 
 // Products
 export interface Product {
@@ -265,6 +268,7 @@ export interface Client {
   modules: string[];
   subscriptions: ClientSubscription[];
   createdAt: string;
+  apps: string[]; // Add apps array for backward compatibility
 }
 
 export interface ClientSubscription {
@@ -292,7 +296,8 @@ export const clients: Client[] = [
       { productId: "prod3", startDate: "2023-02-05", endDate: null, status: "active", userCount: 5 },
       { productId: "prod4", startDate: "2023-02-10", endDate: null, status: "active", userCount: 15 }
     ],
-    createdAt: "2023-01-15"
+    createdAt: "2023-01-15",
+    apps: ["app1"]
   },
   {
     id: "c2",
@@ -309,7 +314,8 @@ export const clients: Client[] = [
       { productId: "prod5", startDate: "2023-03-25", endDate: null, status: "active", userCount: 12 },
       { productId: "prod6", startDate: "2023-03-30", endDate: null, status: "active", userCount: 6 }
     ],
-    createdAt: "2023-03-22"
+    createdAt: "2023-03-22",
+    apps: ["app2"]
   },
   {
     id: "c3",
@@ -327,7 +333,8 @@ export const clients: Client[] = [
       { productId: "prod11", startDate: "2023-05-20", endDate: null, status: "active", userCount: 15 },
       { productId: "prod12", startDate: "2023-05-25", endDate: null, status: "active", userCount: 7 }
     ],
-    createdAt: "2023-05-10"
+    createdAt: "2023-05-10",
+    apps: ["app4"]
   },
   {
     id: "c4",
@@ -343,7 +350,8 @@ export const clients: Client[] = [
     subscriptions: [
       { productId: "prod13", startDate: "2023-02-25", endDate: "2024-01-25", status: "inactive", userCount: 0 }
     ],
-    createdAt: "2023-02-19"
+    createdAt: "2023-02-19",
+    apps: ["app5"]
   },
   {
     id: "c5",
@@ -361,7 +369,8 @@ export const clients: Client[] = [
       { productId: "prod8", startDate: "2023-04-20", endDate: null, status: "active", userCount: 10 },
       { productId: "prod9", startDate: "2023-04-25", endDate: null, status: "active", userCount: 10 }
     ],
-    createdAt: "2023-07-03"
+    createdAt: "2023-07-03",
+    apps: ["app3"]
   }
 ];
 
@@ -636,4 +645,20 @@ export const countUsersForProduct = (productId: string): number => {
     const subscription = getClientSubscriptionByProductId(client, productId);
     return total + (subscription?.userCount || 0);
   }, 0);
+};
+
+// Add a getInvoicesByClientId function for backward compatibility
+export const getInvoicesByClientId = (clientId: string): Invoice[] => {
+  // Get all users for this client
+  const clientUsers = users.filter(user => user.clientId === clientId);
+  
+  // Get all invoices for these users
+  const clientInvoices: Invoice[] = [];
+  
+  clientUsers.forEach(user => {
+    const userInvoices = getInvoicesByUserId(user.id);
+    clientInvoices.push(...userInvoices);
+  });
+  
+  return clientInvoices;
 };

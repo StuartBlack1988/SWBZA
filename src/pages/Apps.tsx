@@ -38,7 +38,7 @@ import {
   Layers
 } from "lucide-react";
 import { 
-  apps as mockApps, 
+  applications as mockApps, 
   App, 
   clients,
   Client
