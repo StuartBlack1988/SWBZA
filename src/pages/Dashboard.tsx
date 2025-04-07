@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FileText, Users, User, LayoutGrid, AlertCircle, CheckCircle, Clock } from "lucide-react";
-import { clients, invoices, users, applications } from "@/services/mockData";
+import { clients, invoices, users, apps } from "@/services/mockData";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/useToast";
 
@@ -75,7 +76,7 @@ const Dashboard: React.FC = () => {
           clients: clients,
           invoices: invoices,
           users: users,
-          applications: applications,
+          applications: apps,
           isLoading: false
         });
       }, 500);
@@ -196,10 +197,14 @@ const Dashboard: React.FC = () => {
                   <div className="text-sm font-medium">Recent Activity</div>
                   <ul className="mt-2 space-y-2">
                     {invoices.slice(0, 3).map(invoice => {
-                      const client = clients.find(c => c.id === invoice.clientId);
+                      // Find the user associated with this invoice
+                      const user = users.find(u => u.id === invoice.userId);
+                      // Find the client associated with this user
+                      const client = user ? clients.find(c => c.id === user.clientId) : null;
+                      
                       return (
                         <li key={invoice.id} className="flex items-center justify-between text-sm">
-                          <span>{invoice.id} - {client?.companyName}</span>
+                          <span>{invoice.id} - {client?.companyName || "Unknown"}</span>
                           <span className={`px-2 py-1 rounded-full text-xs ${
                             invoice.status === "paid" ? "bg-success/10 text-success" :
                             invoice.status === "pending" ? "bg-pending/10 text-pending" :

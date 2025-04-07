@@ -1,3 +1,4 @@
+
 // Mock data for the invoice hub control panel
 
 // Applications
@@ -10,6 +11,9 @@ export interface Application {
   userCount: number;
   activeProducts: number;
   createdAt: string;
+  version: string; // Added property
+  releaseDate: string; // Added property
+  features: string[]; // Added property
 }
 
 export const applications: Application[] = [
@@ -20,7 +24,10 @@ export const applications: Application[] = [
     clientCount: 12,
     userCount: 45,
     activeProducts: 4,
-    createdAt: "2023-01-15"
+    createdAt: "2023-01-15",
+    version: "2.5.0",
+    releaseDate: "2023-01-15",
+    features: ["Custom Templates", "Automated Reminders", "Payment Integration", "Tax Calculation"]
   },
   {
     id: "app2",
@@ -29,7 +36,10 @@ export const applications: Application[] = [
     clientCount: 8,
     userCount: 32,
     activeProducts: 2,
-    createdAt: "2023-03-22"
+    createdAt: "2023-03-22",
+    version: "1.8.3",
+    releaseDate: "2023-03-22",
+    features: ["Invoice History", "Payment Processing", "Communication Center", "Document Storage"]
   },
   {
     id: "app3",
@@ -38,7 +48,10 @@ export const applications: Application[] = [
     clientCount: 15,
     userCount: 60,
     activeProducts: 3,
-    createdAt: "2023-04-10"
+    createdAt: "2023-04-10",
+    version: "3.2.1",
+    releaseDate: "2023-04-10",
+    features: ["Interactive Charts", "Custom Reports", "Data Export", "Trend Analysis"]
   },
   {
     id: "app4",
@@ -47,7 +60,10 @@ export const applications: Application[] = [
     clientCount: 7,
     userCount: 28,
     activeProducts: 4,
-    createdAt: "2023-05-10"
+    createdAt: "2023-05-10",
+    version: "2.0.0",
+    releaseDate: "2023-05-10",
+    features: ["Invoice Creation", "Photo Receipt Capture", "Offline Mode", "Push Notifications"]
   },
   {
     id: "app5",
@@ -56,7 +72,10 @@ export const applications: Application[] = [
     clientCount: 10,
     userCount: 40,
     activeProducts: 3,
-    createdAt: "2023-02-19"
+    createdAt: "2023-02-19",
+    version: "1.5.4",
+    releaseDate: "2023-02-19",
+    features: ["Payment Integration", "Tax Calculation", "Invoice History", "Document Storage"]
   }
 ];
 
