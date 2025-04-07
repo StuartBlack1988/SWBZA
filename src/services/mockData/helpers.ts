@@ -36,4 +36,3 @@ export const getClientNameByClientOrgId = (clientOrgId: string): string => {
   const client = clients.find(c => c.id === clientOrgId);
   return client ? client.companyName : "Unknown Client";
 };
-
