@@ -30,7 +30,13 @@ import {
   Users as UsersIcon,
   XCircle
 } from "lucide-react";
-import { users, clients, applications, getApplicationById, getUsersByClientId } from "@/services/mockData";
+import { 
+  users, 
+  clients, 
+  applications, 
+  getApplicationById, 
+  getClientNameByClientOrgId 
+} from "@/services/mockData";
 
 const Users: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -48,12 +54,6 @@ const Users: React.FC = () => {
     
     return matchesSearch && matchesRole && matchesStatus;
   });
-
-  // Get client name by client ID
-  const getClientName = (clientId: string) => {
-    const client = clients.find(c => c.id === clientId);
-    return client ? client.companyName : "Unknown Client";
-  };
 
   // Get application name by application ID
   const getApplicationName = (applicationId: string) => {
@@ -165,7 +165,7 @@ const Users: React.FC = () => {
           <TabsContent value="all" className="mt-6">
             <UsersTable 
               users={filteredUsers} 
-              getClientName={getClientName} 
+              getClientName={getClientNameByClientOrgId} 
               getApplicationName={getApplicationName}
               formatRole={formatRole}
             />
@@ -174,7 +174,7 @@ const Users: React.FC = () => {
           <TabsContent value="active" className="mt-6">
             <UsersTable 
               users={filteredUsers.filter(user => user.status === "active")} 
-              getClientName={getClientName} 
+              getClientName={getClientNameByClientOrgId} 
               getApplicationName={getApplicationName}
               formatRole={formatRole}
             />
@@ -183,7 +183,7 @@ const Users: React.FC = () => {
           <TabsContent value="inactive" className="mt-6">
             <UsersTable 
               users={filteredUsers.filter(user => user.status === "inactive")} 
-              getClientName={getClientName} 
+              getClientName={getClientNameByClientOrgId} 
               getApplicationName={getApplicationName}
               formatRole={formatRole}
             />
@@ -196,7 +196,7 @@ const Users: React.FC = () => {
 
 interface UsersTableProps {
   users: any[];
-  getClientName: (clientId: string) => string;
+  getClientName: (clientOrgId: string) => string;
   getApplicationName: (applicationId: string) => string;
   formatRole: (role: string) => string;
 }
@@ -233,7 +233,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
-            <TableCell>{getClientName(user.clientId)}</TableCell>
+            <TableCell>{user.clientOrgId ? getClientName(user.clientOrgId) : "N/A"}</TableCell>
             <TableCell>{getApplicationName(user.applicationId)}</TableCell>
             <TableCell>
               <Badge variant="outline">{formatRole(user.role)}</Badge>

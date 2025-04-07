@@ -1,6 +1,6 @@
 
 import { clients, Client, ClientSubscription, getClientSubscriptionByProductId } from './clients';
-import { users, User } from './users';
+import { users, User, getUsersByClientOrgId } from './users';
 import { invoices, Invoice } from './invoices';
 import { products, Product } from './products';
 import { applications, Application } from './applications';
@@ -15,10 +15,10 @@ export const countUsersForProduct = (productId: string): number => {
   }, 0);
 };
 
-// Get invoices by client ID (for backward compatibility)
-export const getInvoicesByClientId = (clientId: string): Invoice[] => {
-  // Get all users for this client
-  const clientUsers = users.filter(user => user.clientId === clientId);
+// Get invoices by client organization ID
+export const getInvoicesByClientOrgId = (clientOrgId: string): Invoice[] => {
+  // Get all users for this client organization
+  const clientUsers = getUsersByClientOrgId(clientOrgId);
   
   // Get all invoices for these users
   const clientInvoices: Invoice[] = [];
@@ -30,3 +30,10 @@ export const getInvoicesByClientId = (clientId: string): Invoice[] => {
   
   return clientInvoices;
 };
+
+// Get client name by client org ID (for compatibility)
+export const getClientNameByClientOrgId = (clientOrgId: string): string => {
+  const client = clients.find(c => c.id === clientOrgId);
+  return client ? client.companyName : "Unknown Client";
+};
+
