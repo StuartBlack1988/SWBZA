@@ -6,14 +6,12 @@ import { User } from "@/services/mockData/users";
 
 interface UserStatusTabsProps {
   filteredUsers: User[];
-  getClientName: (clientOrgId: string) => string;
   getApplicationName: (applicationId: string) => string;
   formatRole: (role: string) => string;
 }
 
 const UserStatusTabs: React.FC<UserStatusTabsProps> = ({ 
   filteredUsers, 
-  getClientName, 
   getApplicationName, 
   formatRole 
 }) => {
@@ -28,7 +26,6 @@ const UserStatusTabs: React.FC<UserStatusTabsProps> = ({
       <TabsContent value="all" className="mt-6">
         <UsersTable 
           users={filteredUsers} 
-          getClientName={getClientName} 
           getApplicationName={getApplicationName}
           formatRole={formatRole}
         />
@@ -36,8 +33,7 @@ const UserStatusTabs: React.FC<UserStatusTabsProps> = ({
       
       <TabsContent value="active" className="mt-6">
         <UsersTable 
-          users={filteredUsers.filter(user => user.status === "active")} 
-          getClientName={getClientName} 
+          users={filteredUsers.filter(user => user.status === "active")}  
           getApplicationName={getApplicationName}
           formatRole={formatRole}
         />
@@ -46,7 +42,6 @@ const UserStatusTabs: React.FC<UserStatusTabsProps> = ({
       <TabsContent value="inactive" className="mt-6">
         <UsersTable 
           users={filteredUsers.filter(user => user.status === "inactive")} 
-          getClientName={getClientName} 
           getApplicationName={getApplicationName}
           formatRole={formatRole}
         />

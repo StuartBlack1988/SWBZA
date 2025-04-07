@@ -22,14 +22,12 @@ import { User } from "@/services/mockData/users";
 
 interface UsersTableProps {
   users: User[];
-  getClientName: (clientOrgId: string) => string;
   getApplicationName: (applicationId: string) => string;
   formatRole: (role: string) => string;
 }
 
 const UsersTable: React.FC<UsersTableProps> = ({ 
   users, 
-  getClientName, 
   getApplicationName,
   formatRole
 }) => {
@@ -47,7 +45,6 @@ const UsersTable: React.FC<UsersTableProps> = ({
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
-          <TableHead>Client</TableHead>
           <TableHead>Application</TableHead>
           <TableHead>Role</TableHead>
           <TableHead>Status</TableHead>
@@ -59,7 +56,6 @@ const UsersTable: React.FC<UsersTableProps> = ({
           <TableRow key={user.id}>
             <TableCell className="font-medium">{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
-            <TableCell>{user.clientOrgId ? getClientName(user.clientOrgId) : "N/A"}</TableCell>
             <TableCell>{getApplicationName(user.applicationId)}</TableCell>
             <TableCell>
               <Badge variant="outline">{formatRole(user.role)}</Badge>

@@ -2,10 +2,7 @@
 // Re-export everything from the individual files
 export * from './applications';
 export * from './products';
-export * from './clients';
 export * from './users';
-export * from './invoices';
-export * from './helpers';
 
 // For backward compatibility
 import { applications, Application } from './applications';

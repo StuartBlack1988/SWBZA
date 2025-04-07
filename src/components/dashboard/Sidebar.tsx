@@ -66,12 +66,6 @@ const Sidebar: React.FC = () => {
             isActive={isActive("/dashboard")}
           />
           <SidebarItem
-            icon={FileText}
-            label="Invoices"
-            href="/invoices"
-            isActive={isActive("/invoices")}
-          />
-          <SidebarItem
             icon={LayoutGrid}
             label="Applications"
             href="/applications"

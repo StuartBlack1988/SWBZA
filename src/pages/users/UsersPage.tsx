@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { users } from "@/services/mockData/users";
-import { getApplicationById, getClientNameByClientOrgId } from "@/services/mockData";
+import { getApplicationById} from "@/services/mockData";
 import UserSearchBar from "./components/UserSearchBar";
 import UserFilters from "./components/UserFilters";
 import UserStatusTabs from "./components/UserStatusTabs";
@@ -53,7 +53,6 @@ const UsersPage: React.FC = () => {
 
         <UserStatusTabs 
           filteredUsers={filteredUsers}
-          getClientName={getClientNameByClientOrgId}
           getApplicationName={getAppName}
           formatRole={formatRole}
         />

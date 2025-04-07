@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { apps, App, clients, Client } from "@/services/mockData";
+import { apps, App} from "@/services/mockData";
 
 // Import components
 import AppSearchAndFilter from "./apps/AppSearchAndFilter";
@@ -21,22 +21,11 @@ const Apps: React.FC = () => {
     app.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Sort apps by client count
-  const sortedApps = [...filteredApps].sort((a, b) => {
-    return sortOrder === "asc" 
-      ? a.clientCount - b.clientCount 
-      : b.clientCount - a.clientCount;
-  });
-
   // Get selected app
   const selectedApp = selectedAppId 
     ? apps.find(app => app.id === selectedAppId) 
     : null;
 
-  // Get clients using the app
-  const getClientsUsingApp = (appId: string): Client[] => {
-    return clients.filter(client => client.apps.includes(appId));
-  };
 
   // Toggle sort order
   const toggleSortOrder = () => {
@@ -66,14 +55,8 @@ const Apps: React.FC = () => {
           onSortToggle={toggleSortOrder}
         />
 
-        <AppListGrid
-          apps={sortedApps}
-          onViewDetails={setSelectedAppId}
-        />
-
         <AppDetailsDialog
           app={selectedApp}
-          clients={selectedApp ? getClientsUsingApp(selectedApp.id) : []}
           open={selectedAppId !== null}
           onOpenChange={(open) => !open && setSelectedAppId(null)}
         />

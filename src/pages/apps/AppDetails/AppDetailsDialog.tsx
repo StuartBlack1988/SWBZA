@@ -14,22 +14,17 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { App, Client } from "@/services/mockData";
-
-import OverviewTab from "./OverviewTab";
-import ClientsTab from "./ClientsTab";
+import { App} from "@/services/mockData";
 import FeaturesTab from "./FeaturesTab";
 
 interface AppDetailsDialogProps {
   app: App | null;
-  clients: Client[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 const AppDetailsDialog: React.FC<AppDetailsDialogProps> = ({ 
-  app, 
-  clients, 
+  app,
   open, 
   onOpenChange 
 }) => {
@@ -57,12 +52,6 @@ const AppDetailsDialog: React.FC<AppDetailsDialogProps> = ({
 
           {/* Overview Tab */}
           <TabsContent value="overview">
-            <OverviewTab app={app} clients={clients} />
-          </TabsContent>
-
-          {/* Clients Tab */}
-          <TabsContent value="clients">
-            <ClientsTab clients={clients} />
           </TabsContent>
 
           {/* Features Tab */}

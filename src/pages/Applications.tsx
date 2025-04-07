@@ -100,13 +100,6 @@ const Applications: React.FC = () => {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => changeSortBy("clientCount")}
-            >
-              Clients {sortBy === "clientCount" && (sortOrder === "asc" ? "↑" : "↓")}
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
               onClick={() => changeSortBy("createdAt")}
             >
               Date {sortBy === "createdAt" && (sortOrder === "asc" ? "↑" : "↓")}
