@@ -1,4 +1,3 @@
-
 import { v4 as uuidv4 } from 'uuid';
 import { applications } from './applications';
 import { addPriceHistory } from './productPriceHistory';
@@ -207,7 +206,15 @@ export const getAllProducts = (): Product[] => {
   return [...products];
 };
 
-export const addProduct = (product: Omit<Product, 'id' | 'createdAt'>): Product => {
+export const addProduct = (product: {
+  name: string;
+  description: string;
+  price: number;
+  vat: number;
+  isSubscription: boolean;
+  duration: string;
+  applicationId: string;
+}): Product => {
   const now = new Date().toISOString();
   const newProduct: Product = {
     id: uuidv4(),

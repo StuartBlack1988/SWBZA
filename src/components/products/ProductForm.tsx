@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -74,7 +73,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess, onCancel 
         updateProduct(product.id, data);
         toast.success("Product updated successfully");
       } else {
-        addProduct(data);
+        const newProductData = {
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          vat: data.vat,
+          isSubscription: data.isSubscription,
+          duration: data.duration || "monthly",
+          applicationId: data.applicationId
+        };
+        
+        addProduct(newProductData);
         toast.success("Product added successfully");
       }
       onSuccess();
