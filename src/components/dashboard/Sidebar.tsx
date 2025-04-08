@@ -8,7 +8,8 @@ import {
   Home, 
   LogOut,
   Settings,
-  LayoutGrid
+  LayoutGrid,
+  Building
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -76,6 +77,12 @@ const Sidebar: React.FC = () => {
             label="Users"
             href="/users"
             isActive={isActive("/users")}
+          />
+          <SidebarItem
+            icon={Building}
+            label="Clients"
+            href="/clients"
+            isActive={isActive("/clients")}
           />
           <SidebarItem
             icon={Settings}

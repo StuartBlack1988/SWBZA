@@ -3,6 +3,7 @@
 export * from './applications';
 export * from './products';
 export * from './users';
+export * from './clients';
 
 // For backward compatibility
 import { applications, Application } from './applications';
