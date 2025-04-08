@@ -31,17 +31,34 @@ const ClientsPage: React.FC = () => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [clientsList, setClientsList] = useState<Client[]>(clients);
 
-  const handleAddClient = (data: { name: string }) => {
-    const newClient = addClient(data.name);
+  const handleAddClient = (data: any) => {
+    // Create a client object with all required fields
+    const clientData = {
+      name: data.name,
+      contactEmail: data.contactEmail || "",
+      contactPhone: data.contactPhone || "",
+      address: data.address || "",
+      companyName: data.companyName
+    };
+    
+    const newClient = addClient(clientData);
     setClientsList([...clientsList]);
     setIsAddDialogOpen(false);
     toast.success("Client added successfully");
   };
 
-  const handleEditClient = (data: { name: string }) => {
+  const handleEditClient = (data: any) => {
     if (!selectedClient) return;
     
-    updateClient(selectedClient.id, { name: data.name });
+    const updates = {
+      name: data.name,
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      address: data.address,
+      companyName: data.companyName
+    };
+    
+    updateClient(selectedClient.id, updates);
     setClientsList([...clientsList]);
     setIsEditDialogOpen(false);
     setSelectedClient(null);

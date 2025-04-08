@@ -19,6 +19,12 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Client name must be at least 2 characters.",
   }),
+  contactEmail: z.string().email({
+    message: "Please enter a valid email address.",
+  }).optional().or(z.literal('')),
+  contactPhone: z.string().optional().or(z.literal('')),
+  address: z.string().optional().or(z.literal('')),
+  companyName: z.string().optional().or(z.literal(''))
 });
 
 interface ClientFormProps {
@@ -36,6 +42,10 @@ const ClientForm: React.FC<ClientFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: client?.name || "",
+      contactEmail: client?.contactEmail || "",
+      contactPhone: client?.contactPhone || "",
+      address: client?.address || "",
+      companyName: client?.companyName || ""
     },
   });
 
@@ -55,6 +65,63 @@ const ClientForm: React.FC<ClientFormProps> = ({
             </FormItem>
           )}
         />
+        
+        <FormField
+          control={form.control}
+          name="contactEmail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Email</FormLabel>
+              <FormControl>
+                <Input placeholder="contact@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="contactPhone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Contact Phone</FormLabel>
+              <FormControl>
+                <Input placeholder="(555) 123-4567" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Address</FormLabel>
+              <FormControl>
+                <Input placeholder="123 Main St, City, Country" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="companyName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Company Name (if different from client name)" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onCancel} type="button">
             Cancel
