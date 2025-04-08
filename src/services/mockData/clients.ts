@@ -17,7 +17,7 @@ export interface Client {
 
 export const clients: Client[] = [
   {
-    id: uuidv4(),
+    id: "client1",
     name: "Acme Corporation",
     contactEmail: "contact@acme.com",
     contactPhone: "555-123-4567",
@@ -29,7 +29,7 @@ export const clients: Client[] = [
     activeUsers: 15
   },
   {
-    id: uuidv4(),
+    id: "client2",
     name: "Globex Industries",
     contactEmail: "info@globex.com",
     contactPhone: "555-987-6543",
@@ -41,7 +41,7 @@ export const clients: Client[] = [
     activeUsers: 8
   },
   {
-    id: uuidv4(),
+    id: "client3",
     name: "Stark Enterprises",
     contactEmail: "contact@stark.com",
     contactPhone: "555-456-7890",

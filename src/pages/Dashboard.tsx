@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Card, CardContent,CardHeader, CardTitle } from "@/components/ui/card";
-import {User, LayoutGrid} from "lucide-react";
-import { users, apps } from "@/services/mockData";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { User, LayoutGrid, Building } from "lucide-react";
+import { users, apps, clients } from "@/services/mockData";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/useToast";
 
@@ -36,6 +36,7 @@ const Dashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState({
     users: [],
     applications: [],
+    clients: [],
     isLoading: true
   });
 
@@ -49,6 +50,7 @@ const Dashboard: React.FC = () => {
         setDashboardData({
           users: users,
           applications: apps,
+          clients: clients,
           isLoading: false
         });
       }, 500);
@@ -60,6 +62,7 @@ const Dashboard: React.FC = () => {
 
   const totalUsers = dashboardData.users.length;
   const totalApps = dashboardData.applications.length;
+  const totalClients = dashboardData.clients.length;
 
   if (dashboardData.isLoading) {
     return (
@@ -95,6 +98,13 @@ const Dashboard: React.FC = () => {
             description="Active services"
             icon={<LayoutGrid className="h-5 w-5 text-primary" />}
             linkTo="/apps"
+          />
+          <DashboardOverviewCard
+            title="Clients"
+            value={totalClients}
+            description="Organizations"
+            icon={<Building className="h-5 w-5 text-primary" />}
+            linkTo="/clients"
           />
         </div>
       </div>
