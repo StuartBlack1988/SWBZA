@@ -1,4 +1,7 @@
+
+import { v4 as uuidv4 } from 'uuid';
 import { applications } from './applications';
+import { addPriceHistory } from './productPriceHistory';
 
 // Products
 export interface Product {
@@ -11,6 +14,7 @@ export interface Product {
   isSubscription: boolean;
   duration: string; // monthly, annual, quarterly, etc.
   createdAt: string;
+  updatedAt?: string;
 }
 
 export const products: Product[] = [
@@ -197,4 +201,61 @@ export const getProductsByApplicationId = (applicationId: string): Product[] => 
 
 export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);
+};
+
+export const getAllProducts = (): Product[] => {
+  return [...products];
+};
+
+export const addProduct = (product: Omit<Product, 'id' | 'createdAt'>): Product => {
+  const now = new Date().toISOString();
+  const newProduct: Product = {
+    id: uuidv4(),
+    ...product,
+    createdAt: now,
+    updatedAt: now
+  };
+  
+  products.push(newProduct);
+  
+  // Add initial price history entry
+  addPriceHistory(newProduct.id, newProduct.price);
+  
+  return newProduct;
+};
+
+export const updateProduct = (id: string, updates: Partial<Product>): Product | undefined => {
+  const productIndex = products.findIndex(product => product.id === id);
+  
+  if (productIndex === -1) {
+    return undefined;
+  }
+  
+  const oldProduct = products[productIndex];
+  const updatedProduct = {
+    ...oldProduct,
+    ...updates,
+    updatedAt: new Date().toISOString()
+  };
+  
+  // If price was updated, create a price history entry
+  if (updates.price && updates.price !== oldProduct.price) {
+    addPriceHistory(id, updates.price);
+  }
+  
+  products[productIndex] = updatedProduct;
+  return updatedProduct;
+};
+
+export const deleteProduct = (id: string): boolean => {
+  const initialLength = products.length;
+  const remainingProducts = products.filter(product => product.id !== id);
+  
+  if (remainingProducts.length === initialLength) {
+    return false;
+  }
+  
+  products.length = 0;
+  products.push(...remainingProducts);
+  return true;
 };

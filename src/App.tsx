@@ -15,6 +15,7 @@ import Applications from "./pages/Applications";
 import Clients from "./pages/Clients";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Products from "./pages/Products"; // New import
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,11 @@ const App = () => (
             <Route path="/clients" element={
               <ProtectedRoute>
                 <Clients />
+              </ProtectedRoute>
+            } />
+            <Route path="/products" element={
+              <ProtectedRoute>
+                <Products />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={

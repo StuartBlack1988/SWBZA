@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, LayoutGrid, Building } from "lucide-react";
-import { users, apps, clients } from "@/services/mockData";
+import { User, LayoutGrid, Building, Archive } from "lucide-react";
+import { users, apps, clients, products } from "@/services/mockData";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/useToast";
 
@@ -37,6 +37,7 @@ const Dashboard: React.FC = () => {
     users: [],
     applications: [],
     clients: [],
+    products: [],
     isLoading: true
   });
 
@@ -51,6 +52,7 @@ const Dashboard: React.FC = () => {
           users: users,
           applications: apps,
           clients: clients,
+          products: products,
           isLoading: false
         });
       }, 500);
@@ -63,6 +65,7 @@ const Dashboard: React.FC = () => {
   const totalUsers = dashboardData.users.length;
   const totalApps = dashboardData.applications.length;
   const totalClients = dashboardData.clients.length;
+  const totalProducts = dashboardData.products.length;
 
   if (dashboardData.isLoading) {
     return (
@@ -105,6 +108,13 @@ const Dashboard: React.FC = () => {
             description="Organizations"
             icon={<Building className="h-5 w-5 text-primary" />}
             linkTo="/clients"
+          />
+          <DashboardOverviewCard
+            title="Products"
+            value={totalProducts}
+            description="Active catalog items"
+            icon={<Archive className="h-5 w-5 text-primary" />}
+            linkTo="/products"
           />
         </div>
       </div>
