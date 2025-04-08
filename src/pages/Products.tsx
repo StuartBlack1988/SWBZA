@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { 
@@ -14,9 +13,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import ProductForm from "@/components/products/ProductForm";
 import ProductFilters from "@/components/products/ProductFilters";
@@ -58,7 +56,6 @@ const Products: React.FC = () => {
   const applyFilters = () => {
     let result = [...products];
     
-    // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase();
       result = result.filter(product => 
@@ -67,7 +64,6 @@ const Products: React.FC = () => {
       );
     }
     
-    // Apply subscription filter
     if (filterSubscription !== null) {
       result = result.filter(product => product.isSubscription === filterSubscription);
     }
@@ -210,17 +206,21 @@ const Products: React.FC = () => {
       </div>
 
       <Dialog open={showAddEditDialog} onOpenChange={setShowAddEditDialog}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0">
+          <DialogHeader className="px-6 pt-6 sticky top-0 bg-background z-10">
             <DialogTitle>
               {selectedProduct ? 'Edit Product' : 'Add New Product'}
             </DialogTitle>
           </DialogHeader>
-          <ProductForm 
-            product={selectedProduct} 
-            onSuccess={handleProductUpdated} 
-            onCancel={() => setShowAddEditDialog(false)} 
-          />
+          <ScrollArea className="max-h-[calc(90vh-8rem)]">
+            <div className="px-6 pb-6">
+              <ProductForm 
+                product={selectedProduct} 
+                onSuccess={handleProductUpdated} 
+                onCancel={() => setShowAddEditDialog(false)} 
+              />
+            </div>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
 
